@@ -1,0 +1,34 @@
+.sale-banner {
+    width: 100%;
+    height: 60px;
+    background-color: black;
+    overflow: hidden;
+    z-index: 1000;
+  }
+  
+  .sale-text {
+    display: flex; 
+    white-space: nowrap; 
+    animation: slide 15s linear infinite;
+  }
+  
+  .sale-text span {
+    display: inline-block;
+    padding-right: 10px;
+    color: white;
+    font-family: "PT Serif", serif;
+    font-weight: 700;
+    font-style: italic;
+    font-size: 2rem;
+  }
+  
+  /* Animación de deslizamiento */
+  @keyframes slide {
+    0% {
+      transform: translateX(0); 
+    }
+    100% {
+      transform: translateX(-100%); 
+    }
+  }
+  
