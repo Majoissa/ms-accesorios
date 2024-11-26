@@ -140,7 +140,7 @@ const FiestaPage = () => {
                     onClick={() => handleDecrement(item)}
                     colorScheme="red"
                     size="sm"
-                    disabled={item.quantity === 0}
+                    disabled={!item.stock || item.quantity === 0}
                   >
                     -
                   </Button>
@@ -149,6 +149,7 @@ const FiestaPage = () => {
                     onClick={() => handleIncrement(item)}
                     colorScheme="teal"
                     size="sm"
+                    disabled={!item.stock}
                   >
                     +
                   </Button>
@@ -156,6 +157,7 @@ const FiestaPage = () => {
                     onClick={() => removeFromCart(item.id)}
                     colorScheme="gray"
                     size="sm"
+                    disabled={!item.stock}
                   >
                     Eliminar
                   </Button>

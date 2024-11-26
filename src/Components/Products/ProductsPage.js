@@ -8,6 +8,7 @@ import {
   Heading,
   Button,
   Badge,
+  Select,
 } from "@chakra-ui/react";
 import { getFirestore, collection, getDocs } from "firebase/firestore";
 import { app } from "../../firebaseConfig";
@@ -17,16 +18,19 @@ const db = getFirestore(app);
 
 const ProductsPage = () => {
   const [products, setProducts] = useState([]);
+  const [filteredProducts, setFilteredProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [selectedCategory, setSelectedCategory] = useState(""); // Estado para la categoría seleccionada
   const { cart, addToCart, updateQuantity, removeFromCart } = useCart();
 
-  const categories = ["acero", "brazaletes", "fiesta", "gemas"];
+  const categories = ["", "acero", "brazaletes", "fiesta", "gemas"]; // "" para mostrar todos los productos
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
         const allProducts = [];
-        for (const category of categories) {
+        for (const category of categories.slice(1)) {
+          // Excluye el primer elemento (vacío)
           const querySnapshot = await getDocs(
             collection(db, `accesorios/${category}/items`)
           );
@@ -52,6 +56,7 @@ const ProductsPage = () => {
         }));
 
         setProducts(syncedProducts);
+        setFilteredProducts(syncedProducts); // Inicialmente, todos los productos
       } catch (error) {
         console.error("Error al cargar los productos: ", error);
       } finally {
@@ -62,9 +67,22 @@ const ProductsPage = () => {
     fetchProducts();
   }, [cart]);
 
+  const handleCategoryChange = (event) => {
+    const category = event.target.value;
+    setSelectedCategory(category);
+
+    if (category === "") {
+      // Mostrar todos los productos
+      setFilteredProducts(products);
+    } else {
+      // Filtrar por categoría
+      setFilteredProducts(products.filter((p) => p.category === category));
+    }
+  };
+
   const handleIncrement = (product) => {
     addToCart(product);
-    setProducts((prevProducts) =>
+    setFilteredProducts((prevProducts) =>
       prevProducts.map((p) =>
         p.id === product.id ? { ...p, quantity: (p.quantity || 0) + 1 } : p
       )
@@ -73,7 +91,7 @@ const ProductsPage = () => {
 
   const handleDecrement = (product) => {
     updateQuantity(product.id, -1);
-    setProducts((prevProducts) =>
+    setFilteredProducts((prevProducts) =>
       prevProducts.map((p) =>
         p.id === product.id && p.quantity > 0
           ? { ...p, quantity: p.quantity - 1 }
@@ -99,6 +117,21 @@ const ProductsPage = () => {
           >
             Todos los Productos
           </Heading>
+          <Box mb={6} textAlign="center">
+            <Select
+              placeholder="Filtrar por categoría"
+              value={selectedCategory}
+              onChange={handleCategoryChange}
+              maxW="300px"
+              mx="auto"
+            >
+              {categories.map((category, index) => (
+                <option key={index} value={category}>
+                  {category || "Todos"}
+                </option>
+              ))}
+            </Select>
+          </Box>
           <Grid
             templateColumns={{
               base: "1fr",
@@ -108,7 +141,7 @@ const ProductsPage = () => {
             gap={6}
             justifyItems="center"
           >
-            {products.map((product) => (
+            {filteredProducts.map((product) => (
               <Box
                 key={product.id}
                 borderWidth="1px"
@@ -155,7 +188,7 @@ const ProductsPage = () => {
                     onClick={() => handleDecrement(product)}
                     colorScheme="red"
                     size="sm"
-                    disabled={product.quantity === 0}
+                    disabled={!product.stock || product.quantity === 0}
                   >
                     -
                   </Button>
@@ -164,6 +197,7 @@ const ProductsPage = () => {
                     onClick={() => handleIncrement(product)}
                     colorScheme="teal"
                     size="sm"
+                    disabled={!product.stock}
                   >
                     +
                   </Button>
@@ -171,6 +205,7 @@ const ProductsPage = () => {
                     onClick={() => removeFromCart(product.id)}
                     colorScheme="gray"
                     size="sm"
+                    disabled={!product.stock}
                   >
                     Eliminar
                   </Button>

@@ -12,14 +12,27 @@ import {
   DrawerBody,
   VStack,
   HStack,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
+  Button,
 } from "@chakra-ui/react";
 import { Link } from "wouter";
-import { HamburgerIcon } from "@chakra-ui/icons";
+import { HamburgerIcon, ChevronDownIcon } from "@chakra-ui/icons";
 
 const Nav = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleDrawer = () => setIsOpen(!isOpen);
+
+  const categories = [
+    { name: "Todos los productos", path: "/productos" },
+    { name: "Acero", path: "/acero" },
+    { name: "Brazaletes", path: "/brazaletes" },
+    { name: "Fiesta", path: "/fiesta" },
+    { name: "Gemas", path: "/gemas" },
+  ];
 
   return (
     <>
@@ -69,11 +82,26 @@ const Nav = () => {
               Inicio
             </Text>
           </Link>
-          <Link to="/productos">
-            <Text textTransform={"uppercase"} color={"white"}>
+          {/* Dropdown de Productos */}
+          <Menu>
+            <MenuButton
+              as={Button}
+              rightIcon={<ChevronDownIcon />}
+              variant="ghost"
+              color="white"
+              textTransform="uppercase"
+              px={0}
+            >
               Productos
-            </Text>
-          </Link>
+            </MenuButton>
+            <MenuList>
+              {categories.map((category) => (
+                <Link to={category.path} key={category.name}>
+                  <MenuItem>{category.name}</MenuItem>
+                </Link>
+              ))}
+            </MenuList>
+          </Menu>
           <Link to="/contacto">
             <Text textTransform={"uppercase"} color={"white"}>
               Contacto
@@ -115,11 +143,26 @@ const Nav = () => {
                   Inicio
                 </Text>
               </Link>
-              <Link to="/productos" onClick={toggleDrawer}>
-                <Text textTransform={"uppercase"} color={"white"}>
+              {/* Dropdown de Productos para móvil */}
+              <Menu>
+                <MenuButton
+                  as={Button}
+                  rightIcon={<ChevronDownIcon />}
+                  variant="ghost"
+                  color="white"
+                  textTransform="uppercase"
+                  pl={0}
+                >
                   Productos
-                </Text>
-              </Link>
+                </MenuButton>
+                <MenuList>
+                  {categories.map((category) => (
+                    <Link to={category.path} key={category.name}>
+                      <MenuItem>{category.name}</MenuItem>
+                    </Link>
+                  ))}
+                </MenuList>
+              </Menu>
               <Link to="/contacto" onClick={toggleDrawer}>
                 <Text textTransform={"uppercase"} color={"white"}>
                   Contacto

@@ -141,7 +141,7 @@ const GemasPage = () => {
                     onClick={() => handleDecrement(item)}
                     colorScheme="red"
                     size="sm"
-                    disabled={item.quantity === 0}
+                    disabled={!item.stock || item.quantity === 0}
                   >
                     -
                   </Button>
@@ -150,6 +150,7 @@ const GemasPage = () => {
                     onClick={() => handleIncrement(item)}
                     colorScheme="teal"
                     size="sm"
+                    disabled={!item.stock}
                   >
                     +
                   </Button>
@@ -157,6 +158,7 @@ const GemasPage = () => {
                     onClick={() => removeFromCart(item.id)}
                     colorScheme="gray"
                     size="sm"
+                    disabled={!item.stock}
                   >
                     Eliminar
                   </Button>

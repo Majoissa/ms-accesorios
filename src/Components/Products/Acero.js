@@ -146,7 +146,7 @@ const AceroPage = () => {
                     onClick={() => handleDecrement(item)}
                     colorScheme="red"
                     size="sm"
-                    disabled={item.quantity === 0}
+                    disabled={!item.stock || item.quantity === 0}
                   >
                     -
                   </Button>
@@ -155,6 +155,7 @@ const AceroPage = () => {
                     onClick={() => handleIncrement(item)}
                     colorScheme="teal"
                     size="sm"
+                    disabled={!item.stock}
                   >
                     +
                   </Button>
@@ -162,6 +163,7 @@ const AceroPage = () => {
                     onClick={() => removeFromCart(item.id)}
                     colorScheme="gray"
                     size="sm"
+                    disabled={!item.stock}
                   >
                     Eliminar
                   </Button>
