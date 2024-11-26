@@ -16,7 +16,7 @@ const ProductGrid = () => {
     {
       name: "Acero Quirúrgico",
       image: require("./Carrousel/acero.jpg"),
-      link: "/acero-quirurgico",
+      link: "/acero",
     },
     {
       name: "Brazaletes",

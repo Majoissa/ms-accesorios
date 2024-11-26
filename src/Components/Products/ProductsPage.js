@@ -6,8 +6,8 @@ import {
   Text,
   Spinner,
   Heading,
-  Badge,
   Button,
+  Badge,
 } from "@chakra-ui/react";
 import { getFirestore, collection, getDocs } from "firebase/firestore";
 import { app } from "../../firebaseConfig";
@@ -15,67 +15,75 @@ import { useCart } from "../../CartContext";
 
 const db = getFirestore(app);
 
-const GemasPage = () => {
-  const [items, setItems] = useState([]);
+const ProductsPage = () => {
+  const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const { cart, addToCart, updateQuantity, removeFromCart } = useCart();
 
-  useEffect(() => {
-    const fetchItems = async () => {
-      try {
-        const querySnapshot = await getDocs(
-          collection(db, "accesorios/gemas/items")
-        );
-        const itemsList = querySnapshot.docs.map((doc) => {
-          const data = doc.data();
+  const categories = ["acero", "brazaletes", "fiesta", "gemas"];
 
-          return {
-            id: doc.id,
-            ...data,
-            imageUrl: Array.isArray(data.imageUrls)
-              ? data.imageUrls[0]
-              : data.imageUrl,
-          };
-        });
-        const syncedItems = itemsList.map((item) => ({
-          ...item,
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const allProducts = [];
+        for (const category of categories) {
+          const querySnapshot = await getDocs(
+            collection(db, `accesorios/${category}/items`)
+          );
+          const categoryProducts = querySnapshot.docs.map((doc) => {
+            const data = doc.data();
+            return {
+              id: doc.id,
+              category,
+              ...data,
+              imageUrl: Array.isArray(data.imageUrls)
+                ? data.imageUrls[0]
+                : data.imageUrl,
+            };
+          });
+          allProducts.push(...categoryProducts);
+        }
+
+        // Sincroniza las cantidades desde el carrito
+        const syncedProducts = allProducts.map((product) => ({
+          ...product,
           quantity:
-            cart.find((cartItem) => cartItem.id === item.id)?.quantity || 0,
+            cart.find((cartItem) => cartItem.id === product.id)?.quantity || 0,
         }));
 
-        setItems(syncedItems);
+        setProducts(syncedProducts);
       } catch (error) {
-        console.error("Error al cargar los accesorios: ", error);
+        console.error("Error al cargar los productos: ", error);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchItems();
+    fetchProducts();
   }, [cart]);
 
-  const handleIncrement = (item) => {
-    addToCart(item);
-    setItems((prevItems) =>
-      prevItems.map((i) =>
-        i.id === item.id ? { ...i, quantity: (i.quantity || 0) + 1 } : i
+  const handleIncrement = (product) => {
+    addToCart(product);
+    setProducts((prevProducts) =>
+      prevProducts.map((p) =>
+        p.id === product.id ? { ...p, quantity: (p.quantity || 0) + 1 } : p
       )
     );
   };
 
-  const handleDecrement = (item) => {
-    updateQuantity(item.id, -1);
-    setItems((prevItems) =>
-      prevItems.map((i) =>
-        i.id === item.id && i.quantity > 0
-          ? { ...i, quantity: i.quantity - 1 }
-          : i
+  const handleDecrement = (product) => {
+    updateQuantity(product.id, -1);
+    setProducts((prevProducts) =>
+      prevProducts.map((p) =>
+        p.id === product.id && p.quantity > 0
+          ? { ...p, quantity: p.quantity - 1 }
+          : p
       )
     );
   };
 
   return (
-    <Box maxW="1200px" mx="auto" px={6} py={"12dvh"} minH={"100dvh"}>
+    <Box maxW="1200px" mx="auto" p={6} py={"12dvh"} minH={"100dvh"}>
       {loading ? (
         <Spinner size="xl" color="teal.500" />
       ) : (
@@ -89,40 +97,46 @@ const GemasPage = () => {
             fontFamily={'"Cormorant Garamond", serif'}
             textTransform={"uppercase"}
           >
-            Gemas
+            Todos los Productos
           </Heading>
           <Grid
-            templateColumns="repeat(auto-fit, minmax(300px, 1fr))"
+            templateColumns={{
+              base: "1fr",
+              sm: "repeat(2, 1fr)",
+              md: "repeat(3, 1fr)",
+            }}
             gap={6}
             justifyItems="center"
           >
-            {items.map((item) => (
+            {products.map((product) => (
               <Box
-                key={item.id}
+                key={product.id}
                 borderWidth="1px"
                 borderRadius="md"
                 overflow="hidden"
                 _hover={{ boxShadow: "lg", transform: "scale(1.05)" }}
                 transition="0.3s"
                 minW={{ base: "90dvw", sm: "320px" }}
-                width={"auto"}
               >
                 <Image
-                  src={item.imageUrl} // Mostrar la primera URL
-                  alt={item.name}
+                  src={product.imageUrl}
+                  alt={product.name}
                   w="100%"
                   h="200px"
                   objectFit="cover"
                 />
                 <Box p={4}>
                   <Text fontSize="xl" fontWeight="bold" color="#31302c">
-                    {item.name}
+                    {product.name}
                   </Text>
                   <Text fontSize="md" color="gray.600">
-                    {item.description}
+                    {product.description}
                   </Text>
                   <Text fontSize="lg" fontWeight="bold" color="#aa8c76" mt={2}>
-                    ${item.price.toFixed(2)}
+                    ${product.price.toFixed(2)}
+                  </Text>
+                  <Text fontSize="sm" color="gray.500">
+                    Categoría: {product.category}
                   </Text>
                   <Badge
                     mt={2}
@@ -130,31 +144,31 @@ const GemasPage = () => {
                     py={1}
                     borderRadius="md"
                     color="white"
-                    bg={item.stock ? "#aa8c76" : "red.500"}
+                    bg={product.stock ? "#aa8c76" : "red.500"}
                     fontSize="sm"
                   >
-                    {item.stock ? "En Stock" : "Fuera de Stock"}
+                    {product.stock ? "En Stock" : "Fuera de Stock"}
                   </Badge>
                 </Box>
                 <Box m={4} display="flex" alignItems="center" gap={4}>
                   <Button
-                    onClick={() => handleDecrement(item)}
+                    onClick={() => handleDecrement(product)}
                     colorScheme="red"
                     size="sm"
-                    disabled={item.quantity === 0}
+                    disabled={product.quantity === 0}
                   >
                     -
                   </Button>
-                  <Text>{item.quantity || 0}</Text>
+                  <Text>{product.quantity || 0}</Text>
                   <Button
-                    onClick={() => handleIncrement(item)}
+                    onClick={() => handleIncrement(product)}
                     colorScheme="teal"
                     size="sm"
                   >
                     +
                   </Button>
                   <Button
-                    onClick={() => removeFromCart(item.id)}
+                    onClick={() => removeFromCart(product.id)}
                     colorScheme="gray"
                     size="sm"
                   >
@@ -170,4 +184,4 @@ const GemasPage = () => {
   );
 };
 
-export default GemasPage;
+export default ProductsPage;

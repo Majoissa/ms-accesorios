@@ -1,6 +1,7 @@
 import React from "react";
 import { Box, Icon } from "@chakra-ui/react";
 import { FaShoppingCart } from "react-icons/fa";
+import { Link } from "wouter";
 import "./FloatingButtons.css";
 
 const FloatingCart = () => {
@@ -22,9 +23,10 @@ const FloatingCart = () => {
       boxShadow="0 4px 8px rgba(0, 0, 0, 0.2)"
       transition="transform 0.2s ease-in-out"
       _hover={{ transform: "scale(1.1)" }}
-      onClick={() => alert("Carrito abierto")}
     >
-      <Icon as={FaShoppingCart} color="white" w={8} h={8} />
+      <Link href="/carrito">
+        <Icon as={FaShoppingCart} color="white" w={8} h={8} />
+      </Link>
     </Box>
   );
 };

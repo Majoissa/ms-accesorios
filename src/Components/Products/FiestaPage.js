@@ -15,7 +15,7 @@ import { useCart } from "../../CartContext";
 
 const db = getFirestore(app);
 
-const GemasPage = () => {
+const FiestaPage = () => {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const { cart, addToCart, updateQuantity, removeFromCart } = useCart();
@@ -24,7 +24,7 @@ const GemasPage = () => {
     const fetchItems = async () => {
       try {
         const querySnapshot = await getDocs(
-          collection(db, "accesorios/gemas/items")
+          collection(db, "accesorios/fiesta/items")
         );
         const itemsList = querySnapshot.docs.map((doc) => {
           const data = doc.data();
@@ -42,7 +42,6 @@ const GemasPage = () => {
           quantity:
             cart.find((cartItem) => cartItem.id === item.id)?.quantity || 0,
         }));
-
         setItems(syncedItems);
       } catch (error) {
         console.error("Error al cargar los accesorios: ", error);
@@ -89,7 +88,7 @@ const GemasPage = () => {
             fontFamily={'"Cormorant Garamond", serif'}
             textTransform={"uppercase"}
           >
-            Gemas
+            Aros de fiesta
           </Heading>
           <Grid
             templateColumns="repeat(auto-fit, minmax(300px, 1fr))"
@@ -170,4 +169,4 @@ const GemasPage = () => {
   );
 };
 
-export default GemasPage;
+export default FiestaPage;

@@ -1,6 +1,8 @@
 import React from "react";
 import { Box, Flex, Link, Text, Image, Icon } from "@chakra-ui/react";
 import { FaInstagram, FaWhatsapp, FaEnvelope } from "react-icons/fa";
+import FloatingWhatsapp from "../FloatingButtons/Whatsapp";
+import FloatingCart from "../FloatingButtons/FloatingCart";
 
 const Footer = () => {
   return (
@@ -44,6 +46,8 @@ const Footer = () => {
           </Link>
         </Flex>
       </Flex>
+      <FloatingCart />
+      <FloatingWhatsapp />
     </Box>
   );
 };

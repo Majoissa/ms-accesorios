@@ -15,7 +15,7 @@ import { useCart } from "../../CartContext";
 
 const db = getFirestore(app);
 
-const GemasPage = () => {
+const BrazaletesPage = () => {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const { cart, addToCart, updateQuantity, removeFromCart } = useCart();
@@ -24,7 +24,7 @@ const GemasPage = () => {
     const fetchItems = async () => {
       try {
         const querySnapshot = await getDocs(
-          collection(db, "accesorios/gemas/items")
+          collection(db, "accesorios/brazaletes/items")
         );
         const itemsList = querySnapshot.docs.map((doc) => {
           const data = doc.data();
@@ -37,6 +37,8 @@ const GemasPage = () => {
               : data.imageUrl,
           };
         });
+
+        // Sincroniza las cantidades desde el carrito
         const syncedItems = itemsList.map((item) => ({
           ...item,
           quantity:
@@ -52,7 +54,7 @@ const GemasPage = () => {
     };
 
     fetchItems();
-  }, [cart]);
+  }, [cart]); // Re-sincroniza cuando el carrito cambia
 
   const handleIncrement = (item) => {
     addToCart(item);
@@ -89,7 +91,7 @@ const GemasPage = () => {
             fontFamily={'"Cormorant Garamond", serif'}
             textTransform={"uppercase"}
           >
-            Gemas
+            Brazaletes
           </Heading>
           <Grid
             templateColumns="repeat(auto-fit, minmax(300px, 1fr))"
@@ -108,7 +110,7 @@ const GemasPage = () => {
                 width={"auto"}
               >
                 <Image
-                  src={item.imageUrl} // Mostrar la primera URL
+                  src={item.imageUrl}
                   alt={item.name}
                   w="100%"
                   h="200px"
@@ -170,4 +172,4 @@ const GemasPage = () => {
   );
 };
 
-export default GemasPage;
+export default BrazaletesPage;

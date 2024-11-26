@@ -8,7 +8,12 @@ import {
   FormLabel,
   Select,
   Stack,
+  IconButton,
+  Switch,
+  Flex,
+  Text,
 } from "@chakra-ui/react";
+import { AddIcon } from "@chakra-ui/icons"; // Icono para el botón de agregar
 import { getFirestore, collection, addDoc } from "firebase/firestore"; // Importa Firestore
 import { app } from "../../firebaseConfig"; // Importa tu configuración de Firebase
 
@@ -19,7 +24,8 @@ const AddAccessoryForm = () => {
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
   const [category, setCategory] = useState("");
-  const [imageUrl, setImageUrl] = useState("");
+  const [imageUrls, setImageUrls] = useState([""]); // Estado para múltiples URLs
+  const [stock, setStock] = useState(false); // Estado para el stock (true/false)
   const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async (e) => {
@@ -33,7 +39,8 @@ const AddAccessoryForm = () => {
         name,
         description,
         price: parseFloat(price),
-        imageUrl,
+        imageUrls, // Enviar el array de URLs
+        stock, // Enviar el valor de stock
       });
 
       alert("Accesorio agregado con éxito.");
@@ -41,13 +48,24 @@ const AddAccessoryForm = () => {
       setDescription("");
       setPrice("");
       setCategory("");
-      setImageUrl("");
+      setImageUrls([""]);
+      setStock(false);
     } catch (error) {
       console.error("Error al agregar el accesorio: ", error);
       alert("Hubo un error al agregar el accesorio.");
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleAddImageUrl = () => {
+    setImageUrls([...imageUrls, ""]); // Agrega un nuevo input vacío al array
+  };
+
+  const handleImageUrlChange = (index, value) => {
+    const updatedUrls = [...imageUrls];
+    updatedUrls[index] = value; // Actualiza la URL correspondiente
+    setImageUrls(updatedUrls);
   };
 
   return (
@@ -108,13 +126,38 @@ const AddAccessoryForm = () => {
           </FormControl>
 
           <FormControl isRequired>
-            <FormLabel>URL de la Imagen</FormLabel>
-            <Input
-              type="url"
-              placeholder="URL de la imagen"
-              value={imageUrl}
-              onChange={(e) => setImageUrl(e.target.value)}
-              bg={"white"}
+            <FormLabel>URLs de Imágenes</FormLabel>
+            {imageUrls.map((url, index) => (
+              <Stack direction="row" align="center" key={index} spacing={2}>
+                <Input
+                  type="url"
+                  placeholder={`URL de la imagen ${index + 1}`}
+                  value={url}
+                  onChange={(e) => handleImageUrlChange(index, e.target.value)}
+                  bg={"white"}
+                />
+                {index === imageUrls.length - 1 && (
+                  <IconButton
+                    icon={<AddIcon />}
+                    onClick={handleAddImageUrl}
+                    colorScheme="teal"
+                    aria-label="Agregar URL"
+                  />
+                )}
+              </Stack>
+            ))}
+          </FormControl>
+
+          {/* Switch para Stock */}
+          <FormControl display="flex" alignItems="center">
+            <FormLabel htmlFor="stock" mb="0">
+              ¿En Stock?
+            </FormLabel>
+            <Switch
+              id="stock"
+              isChecked={stock}
+              onChange={(e) => setStock(e.target.checked)}
+              colorScheme="teal"
             />
           </FormControl>
 
@@ -122,7 +165,9 @@ const AddAccessoryForm = () => {
             type="submit"
             colorScheme="teal"
             isLoading={isLoading}
-            disabled={!name || !price || !category || !imageUrl}
+            disabled={
+              !name || !price || !category || imageUrls.some((url) => !url)
+            }
           >
             Agregar Accesorio
           </Button>

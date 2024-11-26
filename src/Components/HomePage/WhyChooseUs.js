@@ -16,7 +16,7 @@ const WhyChooseUs = () => {
   return (
     <Box bg="gray.50" maxW={"100%"} margin={"auto"}>
       <Flex
-        direction={{ base: "column", md: "row" }}
+        direction={{ base: "column", xl: "row" }}
         alignItems="center"
         justifyContent="space-between"
         mx="auto"
@@ -27,7 +27,7 @@ const WhyChooseUs = () => {
           pl={"25px"}
           flex="1"
           spacing={4}
-          maxW={{ base: "90dvw", md: "5d0vw" }}
+          maxW={{ base: "90dvw", md: "50dvw" }}
           textAlign={{ base: "center", md: "left" }}
         >
           <Heading

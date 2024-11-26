@@ -15,7 +15,7 @@ import { useCart } from "../../CartContext";
 
 const db = getFirestore(app);
 
-const GemasPage = () => {
+const AceroPage = () => {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const { cart, addToCart, updateQuantity, removeFromCart } = useCart();
@@ -24,7 +24,7 @@ const GemasPage = () => {
     const fetchItems = async () => {
       try {
         const querySnapshot = await getDocs(
-          collection(db, "accesorios/gemas/items")
+          collection(db, "accesorios/acero/items")
         );
         const itemsList = querySnapshot.docs.map((doc) => {
           const data = doc.data();
@@ -37,6 +37,7 @@ const GemasPage = () => {
               : data.imageUrl,
           };
         });
+        // Sincroniza las cantidades desde el carrito
         const syncedItems = itemsList.map((item) => ({
           ...item,
           quantity:
@@ -89,7 +90,7 @@ const GemasPage = () => {
             fontFamily={'"Cormorant Garamond", serif'}
             textTransform={"uppercase"}
           >
-            Gemas
+            Aros de Acero
           </Heading>
           <Grid
             templateColumns="repeat(auto-fit, minmax(300px, 1fr))"
@@ -115,15 +116,19 @@ const GemasPage = () => {
                   objectFit="cover"
                 />
                 <Box p={4}>
+                  {/* Nombre del producto */}
                   <Text fontSize="xl" fontWeight="bold" color="#31302c">
                     {item.name}
                   </Text>
+                  {/* Descripción */}
                   <Text fontSize="md" color="gray.600">
                     {item.description}
                   </Text>
+                  {/* Precio */}
                   <Text fontSize="lg" fontWeight="bold" color="#aa8c76" mt={2}>
                     ${item.price.toFixed(2)}
                   </Text>
+                  {/* Pill de stock */}
                   <Badge
                     mt={2}
                     px={3}
@@ -170,4 +175,4 @@ const GemasPage = () => {
   );
 };
 
-export default GemasPage;
+export default AceroPage;

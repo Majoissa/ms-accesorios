@@ -22,7 +22,7 @@ const MainContent = () => {
         width={"100%"}
         minHeight={"100vh"}
         mt={{ base: "0px", md: "80px" }}
-        direction={{ base: "column", lg: "row" }}
+        direction={{ base: "column", xl: "row" }}
         spacing={8}
         align={"center"}
         justify={"center"}

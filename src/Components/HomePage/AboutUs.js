@@ -9,7 +9,7 @@ const AboutUs = () => {
   return (
     <Box bg="gray.50" pb={10}>
       <Flex
-        direction={{ base: "column", md: "row" }}
+        direction={{ base: "column", xl: "row" }}
         alignItems="center"
         justifyContent="space-between"
         mx="auto"
@@ -18,7 +18,7 @@ const AboutUs = () => {
         {/* Carrusel */}
         <Box
           flex="1"
-          maxW={{ base: "90dvw", md: "50dvw" }}
+          maxW={{ base: "90dvw", xl: "50dvw" }}
           order={{ base: 1, md: 0 }}
         >
           <Carousel fotos={images} order={{ base: 0, md: 1 }} />
