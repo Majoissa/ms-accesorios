@@ -73,7 +73,7 @@ const Contact = () => {
               focusBorderColor="#31302c"
               bg="white"
               _placeholder={{ color: "#31302c" }}
-              fontSize={"2xl"}
+              fontSize={{ base: "xl", md: "2xl" }}
             />
             <Input
               name="user_email"
@@ -84,7 +84,7 @@ const Contact = () => {
               bg="white"
               _placeholder={{ color: "#31302c" }}
               isRequired
-              fontSize={"2xl"}
+              fontSize={{ base: "xl", md: "2xl" }}
             />
             <Textarea
               name="message"
@@ -93,7 +93,7 @@ const Contact = () => {
               focusBorderColor="#31302c"
               bg="white"
               _placeholder={{ color: "#31302c" }}
-              fontSize={"2xl"}
+              fontSize={{ base: "xl", md: "2xl" }}
             />
             <Button
               type="submit"
@@ -109,7 +109,7 @@ const Contact = () => {
         </form>
 
         {/* Botones de Contacto */}
-        <Flex justify="center" gap={6} mt={6}>
+        <Flex justify="center" gap={1} mt={6}>
           {/* Correo */}
           <Link href="mailto:ms.accesorios97@gmail.com" isExternal>
             <Button

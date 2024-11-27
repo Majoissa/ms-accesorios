@@ -52,6 +52,7 @@ const CartPage = () => {
             <Box
               key={item.id}
               display="flex"
+              flexDirection={{ base: "column", sm: "row" }}
               alignItems="center"
               borderWidth="1px"
               borderRadius="md"
@@ -61,7 +62,7 @@ const CartPage = () => {
               <Image
                 src={item.imageUrl}
                 alt={item.name}
-                boxSize="100px"
+                boxSize={{ base: "100%", sm: "100px" }}
                 objectFit="cover"
               />
               <Stack ml={4} flex="1">

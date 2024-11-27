@@ -46,7 +46,7 @@ const AboutUs = () => {
           {/* Primer párrafo: siempre visible */}
           <Text
             fontFamily={'"Cormorant Garamond", serif'}
-            fontSize={"4xl"}
+            fontSize={{ base: "2xl", md: "4xl" }}
             color="gray.700"
           >
             Mi nombre es María Sofía Issa, una apasionada de los accesorios y
@@ -59,7 +59,7 @@ const AboutUs = () => {
           {/* Segundo párrafo: parcialmente visible */}
           <Text
             fontFamily={'"Cormorant Garamond", serif'}
-            fontSize={"4xl"}
+            fontSize={{ base: "2xl", md: "4xl" }}
             color="gray.700"
           >
             {!showMore ? (

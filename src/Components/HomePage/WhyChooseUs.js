@@ -44,7 +44,7 @@ const WhyChooseUs = () => {
           </Heading>
           <Text
             fontFamily={'"Cormorant Garamond", serif'}
-            fontSize={"4xl"}
+            fontSize={{ base: "2xl", md: "4xl" }}
             color="gray.700"
           >
             En MS Accesorios, combinamos <strong>precios accesibles</strong>, la
@@ -54,7 +54,7 @@ const WhyChooseUs = () => {
           </Text>
           <Text
             fontFamily={'"Cormorant Garamond", serif'}
-            fontSize={"4xl"}
+            fontSize={{ base: "2xl", md: "4xl" }}
             color="gray.700"
           >
             {showMore && (
