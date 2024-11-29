@@ -16,6 +16,7 @@ import { ArrowBackIcon } from "@chakra-ui/icons";
 import { useCart } from "../../CartContext";
 import PaymentStep from "./PaymentStep";
 import { v4 as uuidv4 } from "uuid";
+import { Link } from "wouter";
 
 const CartPage = () => {
   const { cart, updateQuantity, removeFromCart, clearCart } = useCart();
@@ -80,7 +81,8 @@ const CartPage = () => {
                 bg="#aa8c76"
                 _hover={{ bg: "#895e4e" }}
                 size="md"
-                onClick={() => window.history.back()}
+                as={Link}
+                href="/productos"
               >
                 Agregar productos
               </Button>
@@ -213,6 +215,7 @@ const CartPage = () => {
           orderNumber={orderNumber}
           onBack={handleBackToCart}
           onComplete={handleCompletePurchase}
+          total={total}
         />
       )}
     </Box>

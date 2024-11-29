@@ -23,12 +23,12 @@ const handleCopyToClipboard = (text, toast) => {
   });
 };
 
-const PaymentStep = ({ orderNumber, onBack }) => {
+const PaymentStep = ({ orderNumber, onBack, total }) => {
   const { clearCart } = useCart();
   const toast = useToast();
   const [showConfirmation, setShowConfirmation] = useState(false);
 
-  const bankDetails = `Banco: Mercado Pago\nCBU: 0000003100011256327711\nAlias: M.Sofia.IC.mp\nNúmero de Pedido: ${orderNumber}`;
+  const bankDetails = `Banco: Mercado Pago\nCBU: 0000003100011256327711\nAlias: M.Sofia.IC.mp`;
 
   const handleCompletePurchase = () => {
     const whatsappLink = `https://wa.me/5493816532221?text=Hola,%20mi%20número%20de%20pedido%20es%20${orderNumber}%20y%20he%20realizado%20el%20pago.`;
@@ -87,12 +87,20 @@ const PaymentStep = ({ orderNumber, onBack }) => {
       ) : (
         <>
           <Heading
-            size="lg"
+            size="xl"
             textAlign="center"
             color="#aa8c76"
             fontFamily={'"Cormorant Garamond", serif'}
           >
             Información del Pago
+          </Heading>
+          <Heading
+            size="lg"
+            textAlign="center"
+            color="#aa8c76"
+            fontFamily={'"Cormorant Garamond", serif'}
+          >
+            Precio final: ${total.toFixed(2)}
           </Heading>
           <Text color="#31302c">
             Realiza una transferencia bancaria con los siguientes datos:
