@@ -46,12 +46,7 @@ const CartPage = () => {
     <Box maxW="1200px" mx="auto" p={6} py={"12dvh"} minH={"100dvh"}>
       {step === 1 && (
         <>
-          <Box
-            display="flex"
-            alignItems="center"
-            mb={6}
-            justifyContent={"center"}
-          >
+          <Box display="grid" gridTemplateColumns={"50px 1fr 50px"} mb={6}>
             <IconButton
               icon={<ArrowBackIcon />}
               aria-label="Volver"
@@ -65,10 +60,11 @@ const CartPage = () => {
               as="h1"
               size="2xl"
               color="#aa8c76"
+              textAlign={"center"}
               fontFamily={'"Cormorant Garamond", serif'}
               textTransform={"uppercase"}
             >
-              Carrito de compras
+              Carrito
             </Heading>
           </Box>
 
