@@ -20,7 +20,7 @@ const ProductsPage = () => {
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [selectedCategory, setSelectedCategory] = useState(""); // Estado para la categoría seleccionada
+  const [selectedCategory, setSelectedCategory] = useState("");
   const { cart, addToCart, updateQuantity, removeFromCart } = useCart();
 
   const categories = ["", "acero", "brazaletes", "fiesta", "gemas"]; // "" para mostrar todos los productos
@@ -56,7 +56,7 @@ const ProductsPage = () => {
         }));
 
         setProducts(syncedProducts);
-        setFilteredProducts(syncedProducts); // Inicialmente, todos los productos
+        setFilteredProducts(syncedProducts);
       } catch (error) {
         console.error("Error al cargar los productos: ", error);
       } finally {

@@ -1,10 +1,14 @@
 import React from "react";
-import { Box, Icon } from "@chakra-ui/react";
+import { Box, Icon, Text, Badge } from "@chakra-ui/react";
 import { FaShoppingCart } from "react-icons/fa";
 import { Link } from "wouter";
+import { useCart } from "../../CartContext";
 import "./FloatingButtons.css";
 
 const FloatingCart = () => {
+  const { cart } = useCart();
+  const totalQuantity = cart.reduce((sum, item) => sum + item.quantity, 0);
+
   return (
     <Box
       position="fixed"
@@ -25,7 +29,28 @@ const FloatingCart = () => {
       _hover={{ transform: "scale(1.1)" }}
     >
       <Link href="/carrito">
-        <Icon as={FaShoppingCart} color="white" w={8} h={8} />
+        <Box position="relative" display="flex" alignItems="center">
+          <Icon as={FaShoppingCart} color="white" w={8} h={8} />
+          {totalQuantity > 0 && (
+            <Badge
+              position="absolute"
+              top="-5px"
+              right="-5px"
+              bg="red.500"
+              color="white"
+              borderRadius="full"
+              w="20px"
+              h="20px"
+              display="flex"
+              alignItems="center"
+              justifyContent="center"
+              fontSize="sm"
+              boxShadow="0 0 8px rgba(0, 0, 0, 0.2)"
+            >
+              {totalQuantity}
+            </Badge>
+          )}
+        </Box>
       </Link>
     </Box>
   );

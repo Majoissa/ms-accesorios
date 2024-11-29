@@ -7,6 +7,7 @@ export const CartProvider = ({ children }) => {
     const savedCart = localStorage.getItem("cart");
     return savedCart ? JSON.parse(savedCart) : [];
   });
+
   // Efecto para guardar el carrito en localStorage cada vez que cambie
   useEffect(() => {
     localStorage.setItem("cart", JSON.stringify(cart));
@@ -42,9 +43,20 @@ export const CartProvider = ({ children }) => {
     );
   };
 
+  // Nueva función: Vaciar el carrito
+  const clearCart = () => {
+    setCart([]);
+  };
+
   return (
     <CartContext.Provider
-      value={{ cart, addToCart, removeFromCart, updateQuantity }}
+      value={{
+        cart,
+        addToCart,
+        removeFromCart,
+        updateQuantity,
+        clearCart, // Exportar clearCart
+      }}
     >
       {children}
     </CartContext.Provider>
