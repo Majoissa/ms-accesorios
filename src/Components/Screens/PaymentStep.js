@@ -6,9 +6,13 @@ import {
   Heading,
   VStack,
   Divider,
+  Input,
+  FormControl,
+  FormLabel,
   useToast,
 } from "@chakra-ui/react";
 import { useCart } from "../../CartContext";
+import emailjs from "emailjs-com";
 
 const handleCopyToClipboard = (text, toast) => {
   navigator.clipboard.writeText(text).then(() => {
@@ -24,26 +28,85 @@ const handleCopyToClipboard = (text, toast) => {
 };
 
 const PaymentStep = ({ orderNumber, onBack, total }) => {
-  const { clearCart } = useCart();
+  const { cart, clearCart } = useCart();
   const toast = useToast();
   const [showConfirmation, setShowConfirmation] = useState(false);
+
+  // Estados para el formulario
+  const [clientName, setClientName] = useState("");
+  const [clientEmail, setClientEmail] = useState("");
+  const [clientPhone, setClientPhone] = useState("");
 
   const bankDetails = `Banco: Mercado Pago\nCBU: 0000003100011256327711\nAlias: M.Sofia.IC.mp`;
 
   const handleCompletePurchase = () => {
+    if (!clientName || !clientEmail || !clientPhone) {
+      toast({
+        title: "Campos incompletos",
+        description: "Por favor, completa todos los campos del formulario.",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+      return;
+    }
+
+    // Enviar correo al vendedor
+    const productList = cart
+      .map(
+        (item) =>
+          `- ${item.name} (Cantidad: ${
+            item.quantity
+          }, Precio: $${item.price.toFixed(2)})`
+      )
+      .join("\n");
+
+    const emailParams = {
+      orderNumber,
+      clientName,
+      clientEmail,
+      clientPhone,
+      productList,
+      totalPrice: total.toFixed(2),
+    };
+
+    emailjs
+      .send(
+        "service_n1letxt",
+        "template_kpv5qcq",
+        emailParams,
+        "MENCKLPI6UjT9AkBo"
+      )
+      .then(
+        () => {
+          toast({
+            title: "Pedido enviado",
+            description:
+              "El pedido y los datos del cliente fueron enviados al vendedor.",
+            status: "success",
+            duration: 3000,
+            isClosable: true,
+          });
+
+          // Limpiar el carrito y mostrar la confirmación
+          clearCart();
+          setShowConfirmation(true);
+        },
+        (error) => {
+          console.error("Error al enviar el correo:", error);
+          toast({
+            title: "Error al enviar el pedido",
+            description: "Por favor, intenta nuevamente.",
+            status: "error",
+            duration: 3000,
+            isClosable: true,
+          });
+        }
+      );
+
+    // Redirigir a WhatsApp con el número de pedido
     const whatsappLink = `https://wa.me/5493816532221?text=Hola,%20mi%20número%20de%20pedido%20es%20${orderNumber}%20y%20he%20realizado%20el%20pago.`;
     window.open(whatsappLink, "_blank");
-
-    clearCart();
-    setShowConfirmation(true);
-    toast({
-      title: "Compra finalizada",
-      description:
-        "Tu carrito se ha vaciado. Se mostrará la confirmación del pedido.",
-      status: "success",
-      duration: 3000,
-      isClosable: true,
-    });
   };
 
   return (
@@ -68,10 +131,6 @@ const PaymentStep = ({ orderNumber, onBack, total }) => {
           <Text color="#31302c">
             Por favor, conserva este número y envía el comprobante de pago a
             través de WhatsApp para concretar la venta.
-          </Text>
-          <Text mt={4} fontSize="sm" color="gray.500">
-            Una vez que el vendedor confirme el pago, se finalizará el proceso
-            de venta.
           </Text>
           <Button
             mt={6}
@@ -116,6 +175,33 @@ const PaymentStep = ({ orderNumber, onBack, total }) => {
               Número de Pedido: {orderNumber}
             </Text>
           </Box>
+          <Box w="100%" mt={6}>
+            <FormControl mb={4} isRequired>
+              <FormLabel color="#31302c">Nombre completo</FormLabel>
+              <Input
+                placeholder="Escribe tu nombre"
+                value={clientName}
+                onChange={(e) => setClientName(e.target.value)}
+              />
+            </FormControl>
+            <FormControl mb={4} isRequired>
+              <FormLabel color="#31302c">Correo electrónico</FormLabel>
+              <Input
+                type="email"
+                placeholder="Escribe tu correo"
+                value={clientEmail}
+                onChange={(e) => setClientEmail(e.target.value)}
+              />
+            </FormControl>
+            <FormControl mb={4} isRequired>
+              <FormLabel color="#31302c">Número de contacto</FormLabel>
+              <Input
+                placeholder="Escribe tu número de contacto"
+                value={clientPhone}
+                onChange={(e) => setClientPhone(e.target.value)}
+              />
+            </FormControl>
+          </Box>
           <Button
             colorScheme="teal"
             bg="#aa8c76"
@@ -132,7 +218,7 @@ const PaymentStep = ({ orderNumber, onBack, total }) => {
             _hover={{ bg: "#895e4e" }}
             onClick={handleCompletePurchase}
           >
-            Enviar comprobante por WhatsApp
+            Enviar comprobante por WhatsApp y finalizar compra
           </Button>
           <Button
             variant="outline"
